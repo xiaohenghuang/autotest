@@ -8,20 +8,49 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Train model
+        env:
+          GDRIVE_ACCESS_DATA: ${{ secrets.GDRIVE_ACCESS_DATA }}
+          # AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          pip install -r requirements.txt  # Install dependencies
+          dvc pull data --run-cache        # Pull data & run-cache from S3
+          dvc repro                        # Reproduce pipeline
       - name: Create CML report
         env:
-          # AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          GDRIVE_ACCESS_DATA: ${{ secrets.GDRIVE_ACCESS_DATA }}
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
         run: |
-          # Your ML workflow goes here
-          pip install -r requirements.txt
-          # dvc remote modify filterout --local gdrive_user_credentials_file .dvc/tmp/gdrive-user-credentials.json
-          dvc pull
+          echo "## Metrics" >> report.md
+          # Publish confusion matrix diff
+          echo "## Plots" >> report.md
+          echo "### Class confusions" >> report.md
 
-          dvc repro
 
-          git fetch --prune
-          # dvc metrics diff --show-md main > report.md
-          # cml-send-comment report.md
+          cml send-comment report.md
+
+
+
+#name: CML & DVC
+#on: [push]
+#jobs:
+#  run:
+#    runs-on: ubuntu-latest
+#    container: docker://ghcr.io/iterative/cml:0-dvc2-base1
+#    steps:
+#      - uses: actions/checkout@v2
+#        with:
+#          fetch-depth: 0
+#      - name: Create CML report
+#        env:
+#          GDRIVE_ACCESS_DATA: ${{ secrets.GDRIVE_ACCESS_DATA }}
+#          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#
+#        run: |
+#          # Your ML workflow goes here
+#          pip install -r requirements.txt
+#
+#          dvc pull
+#
+#          dvc repro
+#
+#          git fetch --prune
