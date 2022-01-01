@@ -11,7 +11,7 @@ jobs:
       - name: Create CML report
         env:
           # AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          GDRIVE_ACCESS_KEY: ${{ secrets.GDRIVE_ACCESS_KEY }}
+          GDRIVE_ACCESS_DATA: ${{ secrets.GDRIVE_ACCESS_DATA }}
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
         run: |
