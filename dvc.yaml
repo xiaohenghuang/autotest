@@ -8,7 +8,7 @@ stages:
     - autosplit_train.txt
     - autosplit_val.txt
   train:
-    cmd: python yolov5/train.py --img 64 --rect --batch 2 --epochs 1 --data ./data.yaml --weights yolov5s.pt --name test --exist-ok
+    cmd: python yolov5/train.py --img 640 --rect --batch 1 --epochs 1 --data ./data.yaml --weights yolov5s.pt --name test --exist-ok
     deps:
       - ./data.yaml
       - autosplit_train.txt
@@ -17,7 +17,7 @@ stages:
     outs:
       - yolov5/runs/train/test/weights/best.pt
   inference:
-    cmd: python yolov5/detect.py --img 64 --save-txt --exist-ok --source ./test_data --weights yolov5/runs/train/test/weights/best.pt --conf 0.45 --name try
+    cmd: python yolov5/detect.py --img 640 --save-txt --exist-ok --source ./test_data --weights yolov5/runs/train/test/weights/best.pt --conf 0.45 --name try
     deps:
       - test_data/
       - yolov5/runs/train/test/weights/best.pt #best_model/best.pt
