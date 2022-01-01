@@ -8,7 +8,7 @@ stages:
       size: 376052902
       nfiles: 29
     - path: src/prepare.py
-      md5: 33b6ae6b0f93a11a07bd45159e6acb98
+      md5: c21d1fe07d9dc480726b71b1c47445ba
       size: 1604
     outs:
     - path: autosplit_train.txt
